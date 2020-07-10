@@ -150,9 +150,9 @@ def search(graph, state, is_goal, limit, heuristic):
         current_cost, current_state = heappop(queue)
 
         if is_goal(current_state):
-            length += 1
             link = (current_state, actions[current_state])
             path.append(link)
+            previous_state = current_state
             current_state = came_from[current_state]
 
             while (current_state is not None):
@@ -163,7 +163,7 @@ def search(graph, state, is_goal, limit, heuristic):
             # print('states visited: ' + str(len(visited_states)))
             print(time() - start_time, "seconds.")
             print("Length is " + str(length))
-            print("Cost: " + str(cost_so_far[adj_state]))
+            print("Cost: " + str(cost_so_far[previous_state]))
             path.reverse()
             return path
 
