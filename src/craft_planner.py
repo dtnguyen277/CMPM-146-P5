@@ -2,6 +2,7 @@ import json
 from collections import namedtuple, defaultdict, OrderedDict
 from timeit import default_timer as time
 from heapq import heappop, heappush
+from math import inf
 
 Recipe = namedtuple('Recipe', ['name', 'check', 'effect', 'cost'])
 
@@ -114,36 +115,19 @@ def graph(state):
 
 def heuristic(state):
     # Implement your heuristic here!
+    tools = ['bench', 'wooden_pickaxe', 'wooden_axe', 'stone_axe', 'stone_pickaxe', 'iron_pickaxe', 'iron_axe', 'furnace']
+    current_state = state.copy()
+
+    for tool in tools:
+        if state[tool] > 1:
+            return inf
+        return 0
+
+    # for item in 
+
+
     return 0
 
-def get_total_list(goal):
-    things_needed = State({key: 0 for key in Crafting['Items']})
-    tools = ['bench', 'wooden_pickaxe', 'wooden_axe', 'stone_axe', 'stone_pickaxe', 'iron_pickaxe', 'iron_axe', 'furnace']
-
-    queue = []
-
-    for item in goal:
-        queue.append((item, goal[item]))
-
-    while queue:
-        item, amount = queue.pop()
-
-        if item in tools:
-            things_needed[item] = 1
-        else:
-            things_needed[item] += amount
-
-        for action in Crafting['Recipes']:
-            if item in Crafting['Recipes'][action]['Produces']:
-                if 'Consumes' in Crafting['Recipes'][action]:
-                    for consumable in Crafting['Recipes'][action]['Consumes']:
-                        queue.append((consumable, Crafting['Recipes'][action]['Consumes'][consumable]))
-                if 'Requires' in Crafting['Recipes'][action]:
-                    for requireable in Crafting['Recipes'][action]['Requires']:
-                        if things_needed[requireable] == 0:
-                            queue.append((requireable, 1))
-                
-    return things_needed
 
 def search(graph, state, is_goal, limit, heuristic):
 
@@ -183,7 +167,7 @@ def search(graph, state, is_goal, limit, heuristic):
             new_cost = cost_so_far[current_state] + adj_cost
             if adj_state not in cost_so_far or new_cost < cost_so_far[adj_state]:
                 cost_so_far[adj_state] = new_cost
-                priority = new_cost # add heuristic here
+                priority = new_cost + heuristic(state)
                 actions[adj_state] = adj_action
                 heappush(queue, (priority, adj_state))
                 came_from[adj_state] = current_state
@@ -226,7 +210,7 @@ if __name__ == '__main__':
     state.update(Crafting['Initial'])
 
     # Search for a solution
-    resulting_plan = search(graph, state, is_goal, 5, heuristic)
+    resulting_plan = search(graph, state, is_goal, 30, heuristic)
 
     if resulting_plan:
         # Print resulting plan
