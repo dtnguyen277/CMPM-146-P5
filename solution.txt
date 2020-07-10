@@ -1,0 +1,53 @@
+All items: ['bench', 'cart', 'coal', 'cobble', 'furnace', 'ingot', 'iron_axe', 'iron_pickaxe', 'ore', 'plank', 'rail', 'stick', 'stone_axe', 'stone_pickaxe', 'wood', 'wooden_axe', 'wooden_pickaxe']
+Initial inventory: {}
+Goal: {'furnace': 1}
+Example recipe: craft stone_pickaxe at bench -> {'Produces': {'stone_pickaxe': 1}, 'Requires': {'bench': True}, 'Consumes': {'cobble': 3, 'stick': 2}, 'Time': 1}
+0.37173999999999996 seconds.
+Length is 22
+Cost: 48
+         {}
+None
+         {'wood': 1}
+punch for wood
+         {'plank': 4}
+craft plank
+         {'plank': 2, 'stick': 4}
+craft stick
+         {'plank': 2, 'stick': 4, 'wood': 1}
+punch for wood
+         {'plank': 6, 'stick': 4}
+craft plank
+         {'bench': 1, 'plank': 2, 'stick': 4}
+craft bench
+         {'bench': 1, 'plank': 2, 'stick': 4, 'wood': 1}
+punch for wood
+         {'bench': 1, 'plank': 6, 'stick': 4}
+craft plank
+         {'bench': 1, 'plank': 3, 'stick': 2, 'wooden_pickaxe': 1}
+craft wooden_pickaxe at bench
+         {'bench': 1, 'cobble': 1, 'plank': 3, 'stick': 2, 'wooden_pickaxe': 1}
+wooden_pickaxe for cobble
+         {'bench': 1, 'cobble': 2, 'plank': 3, 'stick': 2, 'wooden_pickaxe': 1}
+wooden_pickaxe for cobble
+         {'bench': 1, 'cobble': 3, 'plank': 3, 'stick': 2, 'wooden_pickaxe': 1}
+wooden_pickaxe for cobble
+         {'bench': 1, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+craft stone_pickaxe at bench
+         {'bench': 1, 'cobble': 1, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 2, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 3, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 4, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 5, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 6, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 7, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'cobble': 8, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+stone_pickaxe for cobble
+         {'bench': 1, 'furnace': 1, 'plank': 3, 'stone_pickaxe': 1, 'wooden_pickaxe': 1}
+craft furnace at bench
