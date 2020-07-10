@@ -117,13 +117,19 @@ def heuristic(state):
     # Implement your heuristic here!
     tools = ['bench', 'wooden_pickaxe', 'wooden_axe', 'stone_axe', 'stone_pickaxe', 'iron_pickaxe', 'iron_axe', 'furnace']
     current_state = state.copy()
+    # print(state)
 
     for tool in tools:
         if state[tool] > 1:
             return inf
-        return 0
 
-    # for item in 
+    for item in state:
+        if state[item] >= 20:
+            return inf
+
+    for item in state:
+        if (item == 'stick' or item == 'plank' or item == 'wood') and state[item] >= 10:
+            return inf
 
 
     return 0
