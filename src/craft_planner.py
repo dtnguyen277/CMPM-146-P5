@@ -1,6 +1,7 @@
 import json
 from collections import namedtuple, defaultdict, OrderedDict
 from timeit import default_timer as time
+from heapq import heappop, heappush
 
 Recipe = namedtuple('Recipe', ['name', 'check', 'effect', 'cost'])
 
@@ -114,12 +115,23 @@ def heuristic(state):
 def search(graph, state, is_goal, limit, heuristic):
 
     start_time = time()
+    queue = [(0, state)]
+    cost_so_far = {}
+    came_from = {}
+    path = []
 
     # Implement your search here! Use your heuristic here!
     # When you find a path to the goal return a list of tuples [(state, action)]
     # representing the path. Each element (tuple) of the list represents a state
     # in the path and the action that took you to this state
     while time() - start_time < limit:
+        current_state = heappop(queue)
+        # if is_goal(current_state[1]):
+
+
+        for adj_action, adj_state, adj_cost in graph(current_state):
+            total_cost = current_state[0] + 
+
         pass
 
     # Failed to find a path
