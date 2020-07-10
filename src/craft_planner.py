@@ -118,6 +118,8 @@ def search(graph, state, is_goal, limit, heuristic):
     queue = [(0, state)]
     cost_so_far = {}
     came_from = {}
+    came_from[state] = None
+    cost_so_far[state] = 0
     path = []
 
     # Implement your search here! Use your heuristic here!
@@ -127,10 +129,17 @@ def search(graph, state, is_goal, limit, heuristic):
     while time() - start_time < limit:
         current_state = heappop(queue)
         # if is_goal(current_state[1]):
+            # return
 
 
         for adj_action, adj_state, adj_cost in graph(current_state):
-            total_cost = current_state[0] + 
+            new_cost = cost_so_far[current_state[1]] + adj_cost
+            if adj_state not in cost_so_far or new_cost < cost_so_far[adj_state]:
+                cost_so_far[adj_state] = new_cost
+                priority = new_cost # add heuristic here
+                heappush(queue, (priority, adj_state))
+                came_from[adj_state] = current_state[1]
+
 
         pass
 
