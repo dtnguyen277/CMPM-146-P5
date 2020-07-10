@@ -163,6 +163,7 @@ def search(graph, state, is_goal, limit, heuristic):
             # print('states visited: ' + str(len(visited_states)))
             print(time() - start_time, "seconds.")
             print("Length is " + str(length))
+            print(cost_so_far[adj_state])
             path.reverse()
             return path
 
