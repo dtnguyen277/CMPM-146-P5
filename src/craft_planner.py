@@ -113,11 +113,12 @@ def graph(state):
             yield (r.name, r.effect(state), r.cost)
 
 
-def heuristic(state):
+def heuristic(state, goal_list):
     # Implement your heuristic here!
     tools = ['bench', 'wooden_pickaxe', 'wooden_axe', 'stone_axe', 'stone_pickaxe', 'iron_pickaxe', 'iron_axe', 'furnace']
     current_state = state.copy()
-    # print(state)
+    priority = 0
+    # print(goal_list)
 
     for tool in tools:
         if state[tool] > 1:
@@ -131,11 +132,19 @@ def heuristic(state):
         if (item == 'stick' or item == 'plank' or item == 'wood') and state[item] >= 10:
             return inf
 
+    for item in goal_list:
+        if current_state[item] > goal_list[item]:
+            return inf
 
-    return 0
+    for item in state:
+        if item == 'ingot' and state[item] < 3:
+            return state[item]
 
 
-def search(graph, state, is_goal, limit, heuristic):
+    return priority
+
+
+def search(graph, state, is_goal, limit, heuristic, goal_list):
 
     start_time = time()
     queue = [(0, state)]
@@ -178,7 +187,7 @@ def search(graph, state, is_goal, limit, heuristic):
             new_cost = cost_so_far[current_state] + adj_cost
             if adj_state not in cost_so_far or new_cost < cost_so_far[adj_state]:
                 cost_so_far[adj_state] = new_cost
-                priority = new_cost + heuristic(adj_state)
+                priority = new_cost + heuristic(adj_state, goal_list)
                 actions[adj_state] = adj_action
                 heappush(queue, (priority, adj_state))
                 came_from[adj_state] = current_state
@@ -215,13 +224,14 @@ if __name__ == '__main__':
 
     # Create a function which checks for the goal
     is_goal = make_goal_checker(Crafting['Goal'])
+    goal_list = Crafting['Goal']
 
     # Initialize first state from initial inventory
     state = State({key: 0 for key in Crafting['Items']})
     state.update(Crafting['Initial'])
 
     # Search for a solution
-    resulting_plan = search(graph, state, is_goal, 30, heuristic)
+    resulting_plan = search(graph, state, is_goal, 120, heuristic, goal_list)
 
     if resulting_plan:
         # Print resulting plan
