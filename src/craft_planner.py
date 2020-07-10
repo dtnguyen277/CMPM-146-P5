@@ -128,8 +128,14 @@ def search(graph, state, is_goal, limit, heuristic):
     # in the path and the action that took you to this state
     while time() - start_time < limit:
         current_state = heappop(queue)
-        # if is_goal(current_state[1]):
-            # return
+
+        if is_goal(current_state[1]):
+            path.append(current_state[1])
+            current_state = came_from[current_state]
+
+            while (current_state is not None):
+                path.append(current_state)
+                current_state = came_from[current_state]
 
 
         for adj_action, adj_state, adj_cost in graph(current_state):
