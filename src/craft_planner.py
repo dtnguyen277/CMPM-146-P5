@@ -44,14 +44,16 @@ def make_checker(rule):
         # Tip: Do something with rule['Consumes'] and rule['Requires'].
 
         # Iterates through consumables and checks to see if inventory has enough
-        for consumedItem in rule['Consumes']:
-            if state[consumedItem] - rule['Consumes'][consumedItem] < 0:
-                return False # Need more items than currently have
+        if 'Consumes' in rule:
+            for consumedItem in rule['Consumes']:
+                if state[consumedItem] - rule['Consumes'][consumedItem] < 0:
+                    return False # Need more items than currently have
 
         # Iterates through required items and checks to see if exists in inventory
-        for requiredItem in rule['Requires']:
-            if requiredItem not in state[requiredItem]:
-                return False # Required item not found 
+        if 'Requires' in rule:
+            for requiredItem in rule['Requires']:
+                if not state[requiredItem]:
+                    return False # Required item not found 
 
         # If nothing returned means passes consume and require check
         return True
@@ -71,12 +73,14 @@ def make_effector(rule):
         next_state = state.copy()
         
         # Iterates through produces and adds the value to the current state
-        for produce in rule['Produces']:
-            next_state[produce] = state[produce] + rule['Produces'][produce]
+        if 'Produces' in rule:
+            for produce in rule['Produces']:
+                next_state[produce] = state[produce] + rule['Produces'][produce]
 
         # Iterates though consumes and subtracts the number of items needed from current state
-        for consume in rule['Consumes']:
-            next_state[consume] = state[consume] - rule['Consumes'][consume]
+        if 'Consumes' in rule:
+            for consume in rule['Consumes']:
+                next_state[consume] = state[consume] - rule['Consumes'][consume]
 
         return next_state
 
@@ -112,14 +116,45 @@ def heuristic(state):
     # Implement your heuristic here!
     return 0
 
+def get_total_list(goal):
+    things_needed = State({key: 0 for key in Crafting['Items']})
+    tools = ['bench', 'wooden_pickaxe', 'wooden_axe', 'stone_axe', 'stone_pickaxe', 'iron_pickaxe', 'iron_axe', 'furnace']
+
+    queue = []
+
+    for item in goal:
+        queue.append((item, goal[item]))
+
+    while queue:
+        item, amount = queue.pop()
+
+        if item in tools:
+            things_needed[item] = 1
+        else:
+            things_needed[item] += amount
+
+        for action in Crafting['Recipes']:
+            if item in Crafting['Recipes'][action]['Produces']:
+                if 'Consumes' in Crafting['Recipes'][action]:
+                    for consumable in Crafting['Recipes'][action]['Consumes']:
+                        queue.append((consumable, Crafting['Recipes'][action]['Consumes'][consumable]))
+                if 'Requires' in Crafting['Recipes'][action]:
+                    for requireable in Crafting['Recipes'][action]['Requires']:
+                        if things_needed[requireable] == 0:
+                            queue.append((requireable, 1))
+                
+    return things_needed
+
 def search(graph, state, is_goal, limit, heuristic):
 
     start_time = time()
     queue = [(0, state)]
     cost_so_far = {}
     came_from = {}
+    actions = {}
     came_from[state] = None
     cost_so_far[state] = 0
+    actions[state] = None
     path = []
 
     # Implement your search here! Use your heuristic here!
@@ -127,27 +162,32 @@ def search(graph, state, is_goal, limit, heuristic):
     # representing the path. Each element (tuple) of the list represents a state
     # in the path and the action that took you to this state
     while time() - start_time < limit:
-        current_state = heappop(queue)
+        current_cost, current_state = heappop(queue)
 
-        if is_goal(current_state[1]):
-            path.append(current_state[1])
+        if is_goal(current_state):
+            link = (current_state, actions[current_state])
+            path.append(link)
             current_state = came_from[current_state]
 
             while (current_state is not None):
-                path.append(current_state)
+                link = (current_state, actions[current_state])
+                path.append(link)
                 current_state = came_from[current_state]
+            # print('states visited: ' + str(len(visited_states)))
+            print(time() - start_time, "seconds.")
+            path.reverse()
+            return path
 
 
         for adj_action, adj_state, adj_cost in graph(current_state):
-            new_cost = cost_so_far[current_state[1]] + adj_cost
+            new_cost = cost_so_far[current_state] + adj_cost
             if adj_state not in cost_so_far or new_cost < cost_so_far[adj_state]:
                 cost_so_far[adj_state] = new_cost
                 priority = new_cost # add heuristic here
+                actions[adj_state] = adj_action
                 heappush(queue, (priority, adj_state))
-                came_from[adj_state] = current_state[1]
+                came_from[adj_state] = current_state
 
-
-        pass
 
     # Failed to find a path
     print(time() - start_time, 'seconds.')
